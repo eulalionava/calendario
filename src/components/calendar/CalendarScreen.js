@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { Navbar } from '../ui/Navbar';
 import { messages } from '../../helpers/calendar-messages';
@@ -10,7 +10,7 @@ import moment from 'moment';
 import 'moment/locale/es';
 import { useDispatch, useSelector } from 'react-redux';
 import { uiOpenModal } from '../../actions/ui';
-import { eventClearActiveEvent, eventSetActive } from '../../actions/events';
+import { eventClearActiveEvent, eventSetActive, eventStartLoading } from '../../actions/events';
 import { AddNewFab } from '../ui/AddNewFab';
 import { DeleteEventFab } from '../ui/DeleteEventFab';
 
@@ -24,8 +24,15 @@ export const CalendarScreen = ()=>{
 
     //Extrear el store
     const { events,activeEvent } =  useSelector(state=>state.calendar);
+    const{ uid } =  useSelector(state=>state.auth);
 
     const[lastView,setLastView] = useState(localStorage.getItem('lastView') || 'month');
+
+    //llamados de todo los eventos
+    useEffect( ()=>{
+        dispatch( eventStartLoading() );
+
+    },[dispatch]);
 
     const handDobleClick = (e)=>{
         dispatch( uiOpenModal() );    
@@ -45,8 +52,9 @@ export const CalendarScreen = ()=>{
      }
 
     const evenStyleGetter = (event,start,end,isSelected)=>{
+
         const stye = {
-            backgroundColor:'#6d1cb7',
+            backgroundColor:(uid === event.user._id ) ? '#367CF7':'#465660',
             display:'block',
             opacity:0.8,
             color:'white'

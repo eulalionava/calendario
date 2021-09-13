@@ -7,7 +7,7 @@ import moment from 'moment';
 import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
 import { uiCloseModal } from '../../actions/ui';
-import { eventAddNew, eventClearActiveEvent, eventUpdated } from '../../actions/events';
+import { eventClearActiveEvent, eventStartAddNew, eventStarUpdate} from '../../actions/events';
 
 const customStyles = {
     content: {
@@ -99,17 +99,10 @@ export const CalendarModal =()=>{
             return setTitleValid(false);
         }
         if(activeEvent){
-            dispatch( eventUpdated( formValues ) )
+            dispatch( eventStarUpdate( formValues ) )
         }else{
             //Grabacion de nuevo evento
-            dispatch(eventAddNew({
-                ...formValues,
-                id:new Date().getTime(),
-                user:{
-                    id:'123',
-                    name:'Galax'
-                }
-            }))
+            dispatch( eventStartAddNew(formValues) );
         }
 
         setTitleValid(false);
